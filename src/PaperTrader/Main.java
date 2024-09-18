@@ -1,17 +1,57 @@
 package PaperTrader;
 
+import java.util.Arrays;
 import java.util.Scanner;
 
 public class Main {
-    private Stock[] stocks;
+    static Stock[] stocks = new Stock[0];
 
-    public Stock[] appendStock(Stock addedStock){
+    public static void appendStock(Stock addedStock){
         Stock[] appendedStocks = new Stock[stocks.length+1];
-        for(int i = 0; i < this.stocks.length; i++){
-            appendedStocks[i] = this.stocks[i];
+        for(int i = 0; i < stocks.length; i++){
+            appendedStocks[i] = stocks[i];
         }
         appendedStocks[appendedStocks.length-1] = addedStock;
-        return appendedStocks;
+        stocks = appendedStocks;
+    }
+
+    public void addStock(String name, String ticker, double price, int amount){
+        Stock stock = new Stock(name, ticker, price, amount);
+        if(stocks == null){
+            stocks = new Stock[]{stock};
+        } else {
+            appendStock(stock);
+        }
+    }
+
+    public static void printStocks(){
+        for(Stock stock : stocks){
+            System.out.println(Arrays.toString(stock.getStockInfo()));
+        }
+    }
+
+    public static Stock getNewStock(){
+        Scanner sc = new Scanner(System.in);
+        System.out.print("Enter stock name: ");
+        String name = sc.nextLine();
+        System.out.print("Enter stock ticker: ");
+        String ticker = sc.nextLine();
+        System.out.print("Enter stock price: ");
+        double price = sc.nextDouble();
+        System.out.print("Enter stock amount: ");
+        int amount = sc.nextInt();
+        return new Stock(name, ticker, price, amount);
+    }
+
+    public static void verifyNewStock(Stock stock){
+        Scanner sc = new Scanner(System.in);
+        System.out.print("Is this stock correct?(Y/N): ");
+        System.out.print(Arrays.toString(stock.getStockInfo()));
+        if(sc.nextLine().equals("Y")){
+            appendStock(stock);
+        } else {
+            System.out.println("ERR: Stock not correct exiting to Main Menu...");
+        }
     }
 
     public static void main(String[] args) {
@@ -30,9 +70,11 @@ public class Main {
             switch(selection){
                 case "1":
                     System.out.println("Selected \"Print Portfolio\"");
+                    printStocks();
                     break;
                 case "2":
                     System.out.println("Selected \"Add Stock\"");
+                    verifyNewStock(getNewStock());
                     break;
                 case "3":
                     System.out.println("Selected \"Sell Stock\"");
