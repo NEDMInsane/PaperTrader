@@ -1,34 +1,11 @@
 package PaperTrader;
 
 import java.util.Arrays;
+import java.util.Random;
 import java.util.Scanner;
 
 public class Main {
-    static Stock[] stocks = new Stock[0];
-
-    public static void appendStock(Stock addedStock){
-        Stock[] appendedStocks = new Stock[stocks.length+1];
-        for(int i = 0; i < stocks.length; i++){
-            appendedStocks[i] = stocks[i];
-        }
-        appendedStocks[appendedStocks.length-1] = addedStock;
-        stocks = appendedStocks;
-    }
-
-    public void addStock(String name, String ticker, double price, int amount){
-        Stock stock = new Stock(name, ticker, price, amount);
-        if(stocks == null){
-            stocks = new Stock[]{stock};
-        } else {
-            appendStock(stock);
-        }
-    }
-
-    public static void printStocks(){
-        for(Stock stock : stocks){
-            System.out.println(Arrays.toString(stock.getStockInfo()));
-        }
-    }
+    public static Account loggedInAccount;
 
     public static Stock getNewStock(){
         Scanner sc = new Scanner(System.in);
@@ -43,18 +20,19 @@ public class Main {
         return new Stock(name, ticker, price, amount);
     }
 
-    public static void verifyNewStock(Stock stock){
+    public static boolean verifyNewStock(Stock stock){
         Scanner sc = new Scanner(System.in);
         System.out.print("Is this stock correct?(Y/N): ");
         System.out.print(Arrays.toString(stock.getStockInfo()));
-        if(sc.nextLine().equals("Y")){
-            appendStock(stock);
+        if(sc.nextLine().equals("Y") || sc.nextLine().equals("y")){
+            return true;
         } else {
             System.out.println("ERR: Stock not correct exiting to Main Menu...");
+            return false;
         }
     }
 
-    public static void main(String[] args) {
+    public static void mainMenu(){
         Scanner scnr = new Scanner(System.in);
         boolean running = true;
         while(running) {
@@ -70,11 +48,14 @@ public class Main {
             switch(selection){
                 case "1":
                     System.out.println("Selected \"Print Portfolio\"");
-                    printStocks();
+                    loggedInAccount.printPortfolio();
                     break;
                 case "2":
                     System.out.println("Selected \"Add Stock\"");
-                    verifyNewStock(getNewStock());
+                    Stock stock = getNewStock();
+                    if(verifyNewStock(stock)){
+                        loggedInAccount.appendPortfolio(stock);
+                    }
                     break;
                 case "3":
                     System.out.println("Selected \"Sell Stock\"");
@@ -94,6 +75,30 @@ public class Main {
                     System.out.println("Invalid option... Quitting...");
                     running = false;
             }
+        }
+    }
+
+    public static boolean loginMenu(){
+        //TODO: Actually implement login authentication.
+        Scanner scnr = new Scanner(System.in);
+        Random rand = new Random();
+        System.out.print("Enter username: ");
+        //Use the username for an account name plus random numbers.
+        String username = scnr.nextLine();
+        System.out.print("Enter password: ");
+        String password = scnr.nextLine();
+        String accountName = username + "-" + String.format("%04d", rand.nextInt(10000));
+        Account account = new Account(accountName, 20000.00, null);
+        System.out.println(Arrays.toString(account.getAccountInfo()));
+        loggedInAccount = account;
+        return true;
+    }
+
+    public static void main(String[] args) {
+        if(loginMenu()){
+            mainMenu();
+        } else {
+            System.out.println("ERR: Login Failed...");
         }
     }
 }
