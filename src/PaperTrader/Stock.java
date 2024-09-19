@@ -32,6 +32,7 @@ public class Stock {
     public void setAmount(int amount){
         this.amount = amount;
     }
+    public void setTicker(String ticker){this.ticker = ticker;}
 
     public String[] getStockInfo(){
         return new String[]{name, ticker, Double.toString(price), Integer.toString(amount)};
