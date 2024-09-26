@@ -5,11 +5,10 @@ import java.awt.*;
 
 public class GraphicalInterface {
     public static Account login(){
-        Account account = null;
+        //Account account;
         JFrame frame = new JFrame();
         frame.setTitle("Paper Trader");
         frame.setSize(600, 300);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         JPanel mainPanel = new JPanel();
         frame.add(mainPanel);
         mainPanel.setLayout(new GridLayout(2,1));
@@ -34,18 +33,30 @@ public class GraphicalInterface {
         JButton loginButton = new JButton("Login");
         loginButton.addActionListener(e -> {
             System.out.println("Login Button clicked");
+            frame.dispose();
         });
         buttonPanel.add(loginButton);
         JButton exitButton = new JButton("Exit");
         exitButton.addActionListener(e -> {
+            frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
             frame.dispose();
         });
         buttonPanel.add(exitButton);
 
         frame.setVisible(true);
+        Stock[] stocks = new Stock[]{new Stock("Apple", "AAPL", 30.24, 50)};
 
-        account = new Account("ASD", 2000, null);
+        return new Account("TestAccount-1234", 2000, stocks);
+    }
 
-        return account;
+    public static void mainFrame(){
+        JFrame frame = new JFrame();
+        frame.setTitle("Paper Trader");
+        frame.setSize(800, 1200);
+        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        JPanel mainPanel = new JPanel();
+        frame.add(mainPanel);
+        mainPanel.setLayout(new GridLayout(2,1));
+
     }
 }
