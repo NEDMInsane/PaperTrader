@@ -26,6 +26,33 @@ public class Account {
         this.portfolio = appendedStocks;
     }
 
+    public void buyStock(Stock stock){
+        if(hasLiquid(stock.price() * stock.amount())){
+            System.out.println("You have enough liquid cash");
+            decrementLiquidCash(stock.price() * stock.amount());
+            appendPortfolio(stock);
+        } else {
+            // TODO: Implement trading on margin.
+            System.out.println("You do not have enough liquid cash");
+        }
+    }
+
+    private void decrementLiquidCash(double price) {
+        liquidCash -= price;
+    }
+
+    private void incrementLiquidCash(double price) {
+        liquidCash += price;
+    }
+
+    private boolean hasLiquid(double price) {
+        return liquidCash - price >= 0;
+    }
+
+    public void addStock(Stock stock){
+        appendPortfolio(stock);
+    }
+
     public void addStock(String name, String ticker, double price, int amount){
         Stock stock = new Stock(name, ticker, price, amount);
         if(portfolio == null){
